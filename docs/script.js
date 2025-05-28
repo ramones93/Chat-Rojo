@@ -2,10 +2,12 @@ const chat = document.getElementById('chat');
 const form = document.getElementById('chat-form');
 const input = document.getElementById('user-input');
 
+// Respuestas simuladas
 const respuestas = {
-  hola: "¡Hola! ¿En qué puedo ayudarte hoy?",
-  bici: "¿Estás buscando una bicicleta de montaña o urbana?",
-  gracias: "¡De nada! Estoy para ayudarte.",
+  asociarme: "¡Genial! Podés asociarte desde nuestra web oficial: https://clubaindependiente.com.ar/asociate",
+  partido: "El próximo partido es este domingo a las 19:00 hs en el Libertadores de América.",
+  plantel: "Podés ver el plantel actual en nuestra web: https://clubaindependiente.com.ar/plantel",
+  cuota: "Podés pagar la cuota desde el portal de socios: https://socios.clubaindependiente.com.ar",
 };
 
 function agregarMensaje(mensaje, tipo) {
@@ -16,6 +18,32 @@ function agregarMensaje(mensaje, tipo) {
   chat.scrollTop = chat.scrollHeight;
 }
 
+function mostrarBotonesIniciales() {
+  const contenedor = document.createElement('div');
+  contenedor.className = 'botones-opciones';
+
+  const opciones = [
+    { texto: "Asociarme", clave: "asociarme" },
+    { texto: "Próximo partido", clave: "partido" },
+    { texto: "Plantel", clave: "plantel" },
+    { texto: "Pagar Cuota", clave: "cuota" },
+  ];
+
+  opciones.forEach(op => {
+    const boton = document.createElement('button');
+    boton.className = 'boton-opcion';
+    boton.textContent = op.texto;
+    boton.onclick = () => {
+      agregarMensaje(op.texto, 'user');
+      responder(op.clave);
+      contenedor.remove(); // oculta botones luego de seleccionar
+    };
+    contenedor.appendChild(boton);
+  });
+
+  chat.appendChild(contenedor);
+}
+
 function responder(textoUsuario) {
   const clave = Object.keys(respuestas).find(palabra => textoUsuario.includes(palabra));
   if (clave) {
@@ -24,6 +52,12 @@ function responder(textoUsuario) {
     setTimeout(() => agregarMensaje("Perdón, no entendí. ¿Podés repetirlo?", 'bot'), 500);
   }
 }
+
+// Al cargar la página
+window.onload = () => {
+  agregarMensaje("¡Hola! Soy el asistente virtual de Independiente. ¿En qué puedo ayudarte?", 'bot');
+  mostrarBotonesIniciales();
+};
 
 form.addEventListener('submit', e => {
   e.preventDefault();

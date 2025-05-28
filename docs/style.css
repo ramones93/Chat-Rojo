@@ -3,16 +3,19 @@ body {
   background-color: #f4f4f4;
   margin: 0;
   padding: 0;
+  display: flex;
+  justify-content: center;
 }
 
 .chat-container {
+  width: 100%;
   max-width: 500px;
-  margin: 30px auto;
+  background: white;
   border: 2px solid #900;
   border-radius: 10px;
-  overflow: hidden;
-  background-color: white;
+  margin: 30px auto;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  overflow: hidden;
 }
 
 .chat-box {
@@ -22,6 +25,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  border-bottom: 1px solid #eee;
 }
 
 .message {
@@ -34,13 +38,15 @@ body {
 .message.user {
   align-self: flex-end;
   background-color: #111;
-  color: #f44336; /* Rojo Independiente */
+  color: #f44336;
+  text-align: right;
 }
 
 .message.bot {
   align-self: flex-start;
   background-color: #d32f2f;
-  color: #fff;
+  color: white;
+  text-align: left;
 }
 
 form {
@@ -52,9 +58,9 @@ form {
   flex: 1;
   padding: 12px;
   border: none;
-  border-right: 1px solid #ddd;
   font-size: 16px;
   outline: none;
+  border-right: 1px solid #ddd;
 }
 
 button[type="submit"] {
@@ -71,38 +77,15 @@ button[type="submit"]:hover {
   background-color: #7f0000;
 }
 
-/* Botones del menú inicial */
-.botones-opciones {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 10px;
-  justify-content: center;
-  border-bottom: 1px solid #eee;
-  background-color: #fafafa;
-}
-
-.boton-opcion {
-  background-color: #e53935;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.boton-opcion:hover {
-  background-color: #c62828;
-}
+/* Botones de opciones */
 .botones-opciones {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 12px;
+  padding: 15px;
   align-items: stretch;
-  background-color: #fcecec;
-  border-bottom: 1px solid #eee;
+  background-color: #fafafa;
+  border-top: 1px solid #eee;
 }
 
 .boton-opcion {
@@ -119,4 +102,21 @@ button[type="submit"]:hover {
 
 .boton-opcion:hover {
   background-color: #b71c1c;
+}
+
+/* Botón de voz */
+.toggle-voice-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #900;
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  border-top: 1px solid #ccc;
+  transition: background 0.3s ease;
+}
+
+.toggle-voice-btn:hover {
+  background-color: #700;
 }

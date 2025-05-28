@@ -1,103 +1,61 @@
-/ chatbot.js
-
 const chat = document.getElementById('chat');
 const form = document.getElementById('chat-form');
 const input = document.getElementById('user-input');
 const botonesContenedor = document.getElementById('botones');
-const toggleVoz = document.getElementById('toggle-voz');
 
-let vozActiva = true;
-
-const avatarBot = 'docs/images/avatardiablo.png';
-const wallpaper = 'docs/images/wallpaperdiablo.png';
+const avatarBot = 'images/avatardiablo.png';
 
 const respuestas = {
-  "asociarme": "Podés asociarte desde nuestra web oficial o acercándote a la sede social.",
-  "próximo partido": "El próximo partido es el domingo a las 19:00 contra Racing.",
-  "plantel": "El plantel actual incluye a referentes como Rey, Marcone, Canelo y más.",
-  "pagar cuota": "Podés pagar la cuota desde la app del club o en nuestras sedes.",
+  "hacerme socio": "¡Genial que quieras hacerte socio! Podés asociarte en nuestra web oficial o en la sede del club.",
+  "pagar cuota": "Podés pagar la cuota desde la app oficial del club o en cualquiera de nuestras sucursales.",
+  "próximo partido": "El próximo partido es el domingo a las 17:00 en el Estadio Libertadores de América.",
+  "plantel": "Nuestro plantel actual cuenta con jugadores destacados como Silva, Fernández y Bustos.",
+  "solicitudes": "Podés enviar tus solicitudes por mail o acercarte a atención al socio.",
+  "contacto": "Podés contactarnos vía mail, teléfono o redes sociales oficiales del club.",
 };
 
 const opciones = [
-  "Asociarme",
+  "Hacerme Socio",
+  "Pagar Cuota",
   "Próximo partido",
   "Plantel",
-  "Pagar Cuota"
+  "Solicitudes",
+  "Contacto"
 ];
 
-// Establecer fondo al cargar
-window.onload = () => {
-  document.body.style.backgroundImage = `url(${wallpaper})`;
-  document.body.style.backgroundSize = 'cover';
-  document.body.style.backgroundPosition = 'center';
-  agregarMensaje("¡Hola! ¿En qué puedo ayudarte?", 'bot');
-  mostrarBotones();
-};
-
-// Función para agregar mensaje, con avatar si es bot
-function agregarMensaje(mensaje, tipo) {
+function agregarMensaje(texto, tipo) {
   const msg = document.createElement('div');
-  msg.className = `message ${tipo}`;
+  msg.className = 'message ' + tipo;
 
   if (tipo === 'bot') {
     const img = document.createElement('img');
     img.src = avatarBot;
-    img.alt = 'Avatar bot';
-    img.className = 'avatar-bot';
-    msg.appendChild(img);
+    img.alt = 'Diablito avatar';
+    img.className = 'avatar-msg';
 
-    const texto = document.createElement('div');
-    texto.textContent = mensaje;
-    texto.className = 'texto-mensaje';
-    msg.appendChild(texto);
+    const textoMsg = document.createElement('div');
+    textoMsg.className = 'texto-msg';
+    textoMsg.textContent = texto;
+
+    msg.appendChild(img);
+    msg.appendChild(textoMsg);
   } else {
-    msg.textContent = mensaje;
+    msg.textContent = texto;
   }
 
   chat.appendChild(msg);
   chat.scrollTop = chat.scrollHeight;
-
-  if (tipo === 'bot' && vozActiva) {
-    hablar(mensaje);
-  }
-}
-
-function hablar(texto) {
-  const utterance = new SpeechSynthesisUtterance(texto);
-  utterance.lang = 'es-AR';
-  const voces = window.speechSynthesis.getVoices();
-  const vozArgentina = voces.find(v => v.lang === 'es-AR' && v.name.toLowerCase().includes('hombre')) || voces.find(v => v.lang === 'es-AR');
-  if (vozArgentina) utterance.voice = vozArgentina;
-  speechSynthesis.speak(utterance);
 }
 
 function mostrarBotones() {
   botonesContenedor.innerHTML = '';
-
-  if (opciones.length <= 3) {
-    opciones.forEach(op => {
-      const boton = document.createElement('button');
-      boton.textContent = op;
-      boton.className = 'boton-opcion';
-      boton.onclick = () => manejarOpcion(op);
-      botonesContenedor.appendChild(boton);
-    });
-  } else {
-    const desplegar = document.createElement('button');
-    desplegar.textContent = 'Opciones';
-    desplegar.className = 'boton-opcion';
-    desplegar.onclick = () => {
-      desplegar.remove();
-      opciones.forEach(op => {
-        const boton = document.createElement('button');
-        boton.textContent = op;
-        boton.className = 'boton-opcion';
-        boton.onclick = () => manejarOpcion(op);
-        botonesContenedor.appendChild(boton);
-      });
-    };
-    botonesContenedor.appendChild(desplegar);
-  }
+  opciones.forEach(op => {
+    const boton = document.createElement('button');
+    boton.textContent = op;
+    boton.className = 'boton-opcion';
+    boton.onclick = () => manejarOpcion(op);
+    botonesContenedor.appendChild(boton);
+  });
 }
 
 function manejarOpcion(texto) {
@@ -107,7 +65,8 @@ function manejarOpcion(texto) {
 }
 
 function responder(textoUsuario) {
-  const clave = Object.keys(respuestas).find(p => textoUsuario.includes(p));
+  // Buscar coincidencia simple en respuestas
+  const clave = Object.keys(respuestas).find(k => textoUsuario.includes(k));
   if (clave) {
     setTimeout(() => {
       agregarMensaje(respuestas[clave], 'bot');
@@ -133,7 +92,9 @@ form.addEventListener('submit', e => {
   input.value = '';
 });
 
-toggleVoz.addEventListener('click', () => {
-  vozActiva = !vozActiva;
-  toggleVoz.textContent = vozActiva ? '🔊 Voz activada' : '🔇 Voz desactivada';
-});
+// Inicio del chatbot
+window.onload = () => {
+  agregarMensaje("¡Hola! Soy Diablito, tu asistente del Club Independiente. ¿En qué puedo ayudarte?", 'bot');
+  mostrarBotones();
+};
+

@@ -49,7 +49,7 @@ body {
 .chat-box {
   flex: 1;
   padding: 15px;
-  background-image: url('images/wallpaperdiablo.jpg');
+  background-image: url('images/wallpaperdiablo.png');
   background-size: cover;
   background-repeat: no-repeat;
   overflow-y: auto;

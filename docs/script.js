@@ -1,9 +1,15 @@
+/ chatbot.js
+
 const chat = document.getElementById('chat');
 const form = document.getElementById('chat-form');
 const input = document.getElementById('user-input');
 const botonesContenedor = document.getElementById('botones');
 const toggleVoz = document.getElementById('toggle-voz');
+
 let vozActiva = true;
+
+const avatarBot = 'docs/images/avatardiablo.png';
+const wallpaper = 'docs/images/wallpaperdiablo.png';
 
 const respuestas = {
   "asociarme": "Podés asociarte desde nuestra web oficial o acercándote a la sede social.",
@@ -19,10 +25,35 @@ const opciones = [
   "Pagar Cuota"
 ];
 
+// Establecer fondo al cargar
+window.onload = () => {
+  document.body.style.backgroundImage = `url(${wallpaper})`;
+  document.body.style.backgroundSize = 'cover';
+  document.body.style.backgroundPosition = 'center';
+  agregarMensaje("¡Hola! ¿En qué puedo ayudarte?", 'bot');
+  mostrarBotones();
+};
+
+// Función para agregar mensaje, con avatar si es bot
 function agregarMensaje(mensaje, tipo) {
   const msg = document.createElement('div');
   msg.className = `message ${tipo}`;
-  msg.textContent = mensaje;
+
+  if (tipo === 'bot') {
+    const img = document.createElement('img');
+    img.src = avatarBot;
+    img.alt = 'Avatar bot';
+    img.className = 'avatar-bot';
+    msg.appendChild(img);
+
+    const texto = document.createElement('div');
+    texto.textContent = mensaje;
+    texto.className = 'texto-mensaje';
+    msg.appendChild(texto);
+  } else {
+    msg.textContent = mensaje;
+  }
+
   chat.appendChild(msg);
   chat.scrollTop = chat.scrollHeight;
 
@@ -106,8 +137,3 @@ toggleVoz.addEventListener('click', () => {
   vozActiva = !vozActiva;
   toggleVoz.textContent = vozActiva ? '🔊 Voz activada' : '🔇 Voz desactivada';
 });
-
-window.onload = () => {
-  agregarMensaje("¡Hola! ¿En qué puedo ayudarte?", 'bot');
-  mostrarBotones();
-};

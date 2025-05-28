@@ -1,49 +1,67 @@
 const chat = document.getElementById('chat');
 const form = document.getElementById('chat-form');
 const input = document.getElementById('user-input');
+const botonesOpciones = document.getElementById('botones-opciones');
+const toggleVoiceBtn = document.getElementById('toggle-voice');
 
-const respuestas = {
-  hola: "¡Hola! ¿En qué puedo ayudarte hoy?",
-  asociarme: "Podés asociarte desde la web oficial o acercándote a la sede de Av. Mitre.",
-  partido: "El próximo partido es el domingo contra Racing, en el Libertadores de América.",
-  plantel: "El plantel está compuesto por jugadores como Rey, Cauteruccio, y otros grandes.",
-  cuota: "Podés pagar la cuota desde la app oficial o en la sede.",
-  gracias: "¡De nada! Vamos Rojo.",
-};
-
-let leerRespuestas = true;
+let vozActiva = true;
 let vozSeleccionada = null;
 
-// 🎤 Configurar la voz
+const respuestas = {
+  asociarme: "Podés asociarte ingresando en nuestra web oficial o acercándote a la sede de Avellaneda.",
+  'próximo partido': "El próximo partido se juega este domingo a las 18 hs en el Libertadores de América.",
+  plantel: "Tenemos un plantel competitivo con jóvenes promesas y jugadores de experiencia. ¿Querés conocer alguno en particular?",
+  'pagar cuota': "Podés pagar tu cuota desde la app oficial del club o en cualquier sucursal habilitada.",
+  hola: "¡Hola! ¿En qué puedo ayudarte hoy?"
+};
+
+const opciones = ["Asociarme", "Próximo partido", "Plantel", "Pagar Cuota"];
+
 function configurarVoz() {
   const voces = speechSynthesis.getVoices();
-  vozSeleccionada = voces.find(v => v.lang === 'es-AR' && v.name.toLowerCase().includes('google'))
-                  || voces.find(v => v.lang.startsWith('es') && v.name.toLowerCase().includes('male'))
-                  || voces.find(v => v.lang.startsWith('es'));
+
+  vozSeleccionada =
+    voces.find(v => v.lang === 'es-AR' && v.name.toLowerCase().includes('male')) ||
+    voces.find(v => v.lang === 'es-AR') ||
+    voces.find(v => v.lang.startsWith('es') && v.name.toLowerCase().includes('male')) ||
+    voces.find(v => v.lang.startsWith('es'));
 }
 
-speechSynthesis.onvoiceschanged = configurarVoz;
-
-// 🗣️ Función para hablar
 function hablar(texto) {
-  if (leerRespuestas && vozSeleccionada) {
-    const utter = new SpeechSynthesisUtterance(texto);
-    utter.voice = vozSeleccionada;
-    speechSynthesis.speak(utter);
-  }
+  if (!vozActiva || !vozSeleccionada) return;
+  const utterance = new SpeechSynthesisUtterance(texto);
+  utterance.voice = vozSeleccionada;
+  speechSynthesis.speak(utterance);
 }
 
-// 💬 Agregar mensaje al chat
 function agregarMensaje(mensaje, tipo) {
   const msg = document.createElement('div');
   msg.className = `message ${tipo}`;
   msg.textContent = mensaje;
   chat.appendChild(msg);
   chat.scrollTop = chat.scrollHeight;
-  if (tipo === 'bot') hablar(mensaje);
+
+  if (tipo === 'bot') {
+    hablar(mensaje);
+  }
 }
 
-// 🧠 Responder según intención
+function mostrarOpciones() {
+  botonesOpciones.innerHTML = '';
+  opciones.forEach(opcion => {
+    const btn = document.createElement('button');
+    btn.className = 'boton-opcion';
+    btn.textContent = opcion;
+    btn.onclick = () => manejarOpcion(opcion.toLowerCase());
+    botonesOpciones.appendChild(btn);
+  });
+}
+
+function manejarOpcion(opcion) {
+  agregarMensaje(opcion, 'user');
+  responder(opcion);
+}
+
 function responder(textoUsuario) {
   const clave = Object.keys(respuestas).find(palabra => textoUsuario.includes(palabra));
   if (clave) {
@@ -51,54 +69,14 @@ function responder(textoUsuario) {
       agregarMensaje(respuestas[clave], 'bot');
       setTimeout(() => {
         agregarMensaje("¿Cómo seguimos?", 'bot');
-        mostrarBotones();
-      }, 600);
+        mostrarOpciones();
+      }, 1000);
     }, 500);
   } else {
-    setTimeout(() => {
-      agregarMensaje("Perdón, no entendí. ¿Podés repetirlo?", 'bot');
-    }, 500);
+    setTimeout(() => agregarMensaje("Perdón, no entendí. ¿Podés repetirlo?", 'bot'), 500);
   }
 }
 
-// 🎛️ Mostrar botones
-function mostrarBotones() {
-  const opciones = ['Asociarme', 'Próximo partido', 'Plantel', 'Pagar cuota'];
-  const contenedor = document.createElement('div');
-  contenedor.className = 'botones-opciones-vertical';
-  opciones.forEach(op => {
-    const boton = document.createElement('button');
-    boton.className = 'boton-opcion';
-    boton.textContent = op;
-    boton.onclick = () => {
-      agregarMensaje(op, 'user');
-      responder(op.toLowerCase());
-      contenedor.remove();
-    };
-    contenedor.appendChild(boton);
-  });
-  chat.appendChild(contenedor);
-  chat.scrollTop = chat.scrollHeight;
-}
-
-// 🎚️ Toggle botón voz
-const toggleBtn = document.createElement('button');
-toggleBtn.textContent = '🔊 Leer respuestas: ON';
-toggleBtn.style.margin = '10px';
-toggleBtn.style.padding = '8px 12px';
-toggleBtn.style.border = 'none';
-toggleBtn.style.cursor = 'pointer';
-toggleBtn.style.backgroundColor = '#c62828';
-toggleBtn.style.color = 'white';
-toggleBtn.style.borderRadius = '6px';
-toggleBtn.style.fontWeight = 'bold';
-toggleBtn.onclick = () => {
-  leerRespuestas = !leerRespuestas;
-  toggleBtn.textContent = leerRespuestas ? '🔊 Leer respuestas: ON' : '🔇 Leer respuestas: OFF';
-};
-document.querySelector('.chat-container').prepend(toggleBtn);
-
-// ⌨️ Envío de formulario
 form.addEventListener('submit', e => {
   e.preventDefault();
   const texto = input.value.trim().toLowerCase();
@@ -108,8 +86,13 @@ form.addEventListener('submit', e => {
   input.value = '';
 });
 
-// 🤖 Saludo inicial y botones
-setTimeout(() => {
-  agregarMensaje("¡Hola! Soy el asistente de Independiente. ¿En qué te puedo ayudar?", 'bot');
-  mostrarBotones();
-}, 500);
+toggleVoiceBtn.addEventListener('click', () => {
+  vozActiva = !vozActiva;
+  toggleVoiceBtn.textContent = vozActiva ? "🔊 Voz Activada" : "🔇 Voz Desactivada";
+});
+
+window.speechSynthesis.onvoiceschanged = configurarVoz;
+
+// Iniciar
+agregarMensaje("¡Hola! ¿En qué puedo ayudarte hoy?", 'bot');
+mostrarOpciones();

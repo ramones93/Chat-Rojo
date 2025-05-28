@@ -2,6 +2,38 @@ const chat = document.getElementById('chat');
 const form = document.getElementById('chat-form');
 const input = document.getElementById('user-input');
 
+// Crear y mostrar botón para activar/desactivar voz
+const toggleVozBtn = document.createElement('button');
+toggleVozBtn.textContent = '🔊 Leer respuestas: ON';
+toggleVozBtn.style.margin = '10px auto';
+toggleVozBtn.style.display = 'block';
+toggleVozBtn.style.padding = '8px 16px';
+toggleVozBtn.style.backgroundColor = '#c62828';
+toggleVozBtn.style.color = 'white';
+toggleVozBtn.style.border = 'none';
+toggleVozBtn.style.borderRadius = '10px';
+toggleVozBtn.style.fontWeight = 'bold';
+toggleVozBtn.style.cursor = 'pointer';
+toggleVozBtn.style.maxWidth = '200px';
+document.querySelector('.chat-container').insertBefore(toggleVozBtn, chat);
+
+let leerVoz = localStorage.getItem('leerVoz');
+if (leerVoz === null) {
+  leerVoz = 'on'; // por defecto ON
+  localStorage.setItem('leerVoz', leerVoz);
+}
+actualizarTextoBoton();
+
+toggleVozBtn.onclick = () => {
+  leerVoz = leerVoz === 'on' ? 'off' : 'on';
+  localStorage.setItem('leerVoz', leerVoz);
+  actualizarTextoBoton();
+};
+
+function actualizarTextoBoton() {
+  toggleVozBtn.textContent = leerVoz === 'on' ? '🔊 Leer respuestas: ON' : '🔇 Leer respuestas: OFF';
+}
+
 const respuestas = {
   asociarme: "¡Genial! Podés asociarte desde nuestra web oficial: https://clubaindependiente.com.ar/asociate",
   partido: "El próximo partido es este domingo a las 19:00 hs en el Libertadores de América.",
@@ -9,12 +41,28 @@ const respuestas = {
   cuota: "Podés pagar la cuota desde el portal de socios: https://socios.clubaindependiente.com.ar",
 };
 
+function hablarTexto(texto) {
+  if (leerVoz === 'off') return; // Si está apagado, no hablar
+  if ('speechSynthesis' in window) {
+    const utterance = new SpeechSynthesisUtterance(texto);
+    utterance.lang = 'es-AR';
+    utterance.rate = 1;
+    speechSynthesis.speak(utterance);
+  } else {
+    console.warn("Tu navegador no soporta síntesis de voz.");
+  }
+}
+
 function agregarMensaje(mensaje, tipo) {
   const msg = document.createElement('div');
   msg.className = `message ${tipo}`;
   msg.textContent = mensaje;
   chat.appendChild(msg);
   chat.scrollTop = chat.scrollHeight;
+
+  if (tipo === 'bot') {
+    hablarTexto(mensaje);
+  }
 }
 
 function mostrarBotonesOpciones() {
@@ -77,4 +125,3 @@ form.addEventListener('submit', e => {
   responder(texto);
   input.value = '';
 });
-

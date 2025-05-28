@@ -4,12 +4,12 @@ const input = document.getElementById('user-input');
 const botonesContenedor = document.getElementById('botones');
 
 const respuestas = {
-  "hacerme socio": "¡Genial que quieras ser parte del club! Podés asociarte desde nuestra web oficial o en la sede.",
-  "pagar cuota": "Podés pagar la cuota desde la app del club o en nuestras sedes.",
-  "próximo partido": "El próximo partido es el domingo a las 19:00 contra Racing.",
-  "plantel": "El plantel actual incluye a referentes como Rey, Marcone, Canelo y más.",
-  "solicitudes": "Para solicitudes especiales, por favor contactanos vía formulario o whatsapp.",
-  "contacto": "Podés comunicarte con nosotros al 1234-5678 o por email a contacto@clubdiablo.com"
+  "hacerme socio": "Podés hacerte socio desde nuestra web oficial o acercándote a la sede.",
+  "pagar cuota": "La cuota se puede pagar online o en cualquiera de nuestras sedes.",
+  "próximo partido": "Jugamos este domingo a las 19:00 hs contra Racing.",
+  "plantel": "El plantel está conformado por grandes jugadores como Rey, Marcone, Canelo, entre otros.",
+  "solicitudes": "Podés hacer solicitudes a través del formulario en nuestra web.",
+  "contacto": "Podés contactarnos por redes sociales o al teléfono oficial del club.",
 };
 
 const opciones = [
@@ -52,13 +52,13 @@ function responder(textoUsuario) {
     setTimeout(() => {
       agregarMensaje(respuestas[clave], 'bot');
       setTimeout(() => {
-        agregarMensaje('¿Cómo seguimos?', 'bot');
+        agregarMensaje('¿En qué más te puedo ayudar?', 'bot');
         mostrarBotones();
       }, 600);
     }, 500);
   } else {
     setTimeout(() => {
-      agregarMensaje("Perdón, no entendí. ¿Podés repetirlo?", 'bot');
+      agregarMensaje("No entendí eso, ¿podés repetirlo?", 'bot');
       mostrarBotones();
     }, 500);
   }
@@ -77,5 +77,3 @@ window.onload = () => {
   agregarMensaje("¡Hola! Soy Diablito, ¿en qué puedo ayudarte?", 'bot');
   mostrarBotones();
 };
-
-

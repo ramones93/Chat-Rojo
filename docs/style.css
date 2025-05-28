@@ -1,191 +1,199 @@
-/* Fondo general tipo WhatsApp */
-body {
+/* Reset y base */
+* {
+  box-sizing: border-box;
   margin: 0;
+  padding: 0;
+}
+
+body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-image: url('images/wallpaperdiablo.png');
-  background-size: cover;
-  background-position: center;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #e5ddd5; /* color neutro tipo WhatsApp */
 }
 
-/* Contenedor principal del chat */
+/* Contenedor principal con wallpaper dentro */
 #chat-container {
   width: 380px;
   height: 600px;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  background-image: url('images/wallpaperdiablo.png');
+  background-size: cover;
+  background-position: center;
   border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   position: relative;
+  color: #202c33;
+  font-weight: 400;
+  z-index: 0;
 }
 
-/* Header con avatar y nombre */
+/* Overlay semi-transparente para no perder legibilidad */
+#chat-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(255,255,255,0.8);
+  border-radius: 15px;
+  z-index: 1;
+}
+
+/* El contenido dentro del chat encima del overlay */
+#chat-container > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Header tipo WhatsApp */
 header {
-  background-color: #075E54; /* verde oscuro WhatsApp */
+  background-color: #075E54;
   color: white;
   display: flex;
   align-items: center;
   padding: 12px 15px;
   gap: 12px;
   border-radius: 15px 15px 0 0;
+  position: relative;
+  z-index: 3;
 }
 
-.avatar-header {
+/* Avatar del bot */
+#avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+  border: 2px solid white;
 }
 
-header h1 {
-  font-size: 20px;
-  margin: 0;
+/* Nombre y estado */
+#bot-name {
   font-weight: 700;
+  font-size: 1.1rem;
 }
 
-/* Área de mensajes */
+#bot-status {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/* Chat - área mensajes */
 #chat {
   flex: 1;
   padding: 15px;
   overflow-y: auto;
   scroll-behavior: smooth;
-  background: transparent;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  background-color: white;
+  border-radius: 0 0 15px 15px;
+  z-index: 3;
 }
 
 /* Mensajes */
 .message {
   max-width: 75%;
-  font-size: 14px;
-  line-height: 1.4;
-  word-wrap: break-word;
-  padding: 10px 14px;
+  padding: 8px 12px;
   border-radius: 18px;
-  box-shadow: 0 1px 1px rgb(0 0 0 / 0.1);
+  line-height: 1.3;
+  font-size: 0.95rem;
+  word-wrap: break-word;
+  box-shadow: 0 1px 1.5px rgba(0,0,0,0.15);
 }
 
-/* Mensajes del usuario: burbuja verde claro a la derecha */
 .message.user {
-  background-color: #dcf8c6;
   align-self: flex-end;
-  border-radius: 18px 18px 0 18px;
+  background-color: #dcf8c6;
+  border-bottom-right-radius: 4px;
   color: #202c33;
 }
 
-/* Mensajes del bot: burbuja blanca a la izquierda con avatar */
 .message.bot {
-  background-color: white;
   align-self: flex-start;
-  border-radius: 18px 18px 18px 0;
-  color: #303030;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
+  background-color: #ffffff;
+  border-bottom-left-radius: 4px;
+  color: #202c33;
 }
 
-/* Avatar pequeño al lado de mensaje bot */
-.message.bot .avatar-msg {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-  box-shadow: 0 0 5px rgba(0,0,0,0.15);
-}
-
-/* Contenedor de texto en mensaje bot */
-.message.bot .texto-msg {
-  max-width: calc(100% - 38px);
-}
-
-/* Contenedor de botones debajo del chat */
+/* Botonera */
 #botones {
-  padding: 10px 15px;
-  background: #f2f2f2;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
+  padding: 10px 15px;
+  background-color: white;
+  border-radius: 0 0 15px 15px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
+  z-index: 3;
   justify-content: center;
-  border-top: 1px solid #ddd;
 }
 
-/* Botones de opción */
+/* Botones de opciones */
 .boton-opcion {
-  background-color: #25d366; /* verde WhatsApp */
-  color: white;
+  background-color: #25D366; /* verde WhatsApp */
   border: none;
-  border-radius: 20px;
-  padding: 8px 16px;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 18px;
+  font-size: 0.9rem;
   cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
   transition: background-color 0.2s ease;
   user-select: none;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+  white-space: nowrap;
 }
 
 .boton-opcion:hover {
-  background-color: #128c4a;
+  background-color: #128C4A;
 }
 
-/* Formulario y entrada de texto */
+/* Formulario de entrada */
 #chat-form {
   display: flex;
   padding: 10px 15px;
-  background: #ffffff;
+  background-color: white;
   border-top: 1px solid #ddd;
+  border-radius: 0 0 15px 15px;
+  gap: 10px;
+  z-index: 3;
 }
 
+/* Input de texto */
 #user-input {
   flex: 1;
   padding: 10px 15px;
-  border: 1.8px solid #ddd;
+  border: 1px solid #ddd;
   border-radius: 25px;
-  font-size: 15px;
+  font-size: 1rem;
   outline: none;
   transition: border-color 0.2s ease;
 }
 
 #user-input:focus {
-  border-color: #25d366;
+  border-color: #25D366;
 }
 
-#send-button {
-  background-color: #25d366;
+/* Botón enviar */
+#chat-form button[type="submit"] {
+  background-color: #25D366;
   border: none;
   color: white;
-  padding: 0 18px;
-  margin-left: 10px;
+  padding: 10px 16px;
   border-radius: 50%;
-  font-size: 18px;
   cursor: pointer;
+  font-weight: bold;
+  font-size: 1.1rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.2s ease;
+  user-select: none;
 }
 
-#send-button:hover {
-  background-color: #128c4a;
-}
-
-/* Scrollbar personalizada para chat */
-#chat::-webkit-scrollbar {
-  width: 6px;
-}
-
-#chat::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-#chat::-webkit-scrollbar-thumb {
-  background-color: rgba(0,0,0,0.1);
-  border-radius: 3px;
+#chat-form button[type="submit"]:hover {
+  background-color: #128C4A;
 }

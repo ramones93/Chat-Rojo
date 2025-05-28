@@ -3,17 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chat Simulado</title>
+  <title>Chat Club Independiente</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="chat-container">
     <div id="chat" class="chat-box"></div>
+
+    <div class="botones-opciones" id="botones-opciones"></div>
+
     <form id="chat-form">
       <input type="text" id="user-input" placeholder="Escribí tu mensaje..." autocomplete="off" />
       <button type="submit">Enviar</button>
     </form>
+
+    <button id="toggle-voice" class="toggle-voice-btn">🔊 Voz Activada</button>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>

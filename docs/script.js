@@ -2,7 +2,6 @@ const chat = document.getElementById('chat');
 const form = document.getElementById('chat-form');
 const input = document.getElementById('user-input');
 
-// Respuestas simuladas
 const respuestas = {
   asociarme: "¡Genial! Podés asociarte desde nuestra web oficial: https://clubaindependiente.com.ar/asociate",
   partido: "El próximo partido es este domingo a las 19:00 hs en el Libertadores de América.",
@@ -18,7 +17,7 @@ function agregarMensaje(mensaje, tipo) {
   chat.scrollTop = chat.scrollHeight;
 }
 
-function mostrarBotonesIniciales() {
+function mostrarBotonesOpciones() {
   const contenedor = document.createElement('div');
   contenedor.className = 'botones-opciones';
 
@@ -36,7 +35,7 @@ function mostrarBotonesIniciales() {
     boton.onclick = () => {
       agregarMensaje(op.texto, 'user');
       responder(op.clave);
-      contenedor.remove(); // oculta botones luego de seleccionar
+      contenedor.remove();
     };
     contenedor.appendChild(boton);
   });
@@ -47,16 +46,27 @@ function mostrarBotonesIniciales() {
 function responder(textoUsuario) {
   const clave = Object.keys(respuestas).find(palabra => textoUsuario.includes(palabra));
   if (clave) {
-    setTimeout(() => agregarMensaje(respuestas[clave], 'bot'), 500);
+    setTimeout(() => {
+      agregarMensaje(respuestas[clave], 'bot');
+      setTimeout(() => {
+        agregarMensaje("¿Cómo seguimos?", 'bot');
+        mostrarBotonesOpciones();
+      }, 600);
+    }, 500);
   } else {
-    setTimeout(() => agregarMensaje("Perdón, no entendí. ¿Podés repetirlo?", 'bot'), 500);
+    setTimeout(() => {
+      agregarMensaje("Perdón, no entendí. ¿Podés repetirlo?", 'bot');
+      setTimeout(() => {
+        agregarMensaje("¿Cómo seguimos?", 'bot');
+        mostrarBotonesOpciones();
+      }, 600);
+    }, 500);
   }
 }
 
-// Al cargar la página
 window.onload = () => {
   agregarMensaje("¡Hola! Soy el asistente virtual de Independiente. ¿En qué puedo ayudarte?", 'bot');
-  mostrarBotonesIniciales();
+  mostrarBotonesOpciones();
 };
 
 form.addEventListener('submit', e => {
@@ -67,3 +77,4 @@ form.addEventListener('submit', e => {
   responder(texto);
   input.value = '';
 });
+

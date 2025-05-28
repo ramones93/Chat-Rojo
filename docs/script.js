@@ -3,15 +3,13 @@ const form = document.getElementById('chat-form');
 const input = document.getElementById('user-input');
 const botonesContenedor = document.getElementById('botones');
 
-const avatarBot = 'images/avatardiablo.png';
-
 const respuestas = {
-  "hacerme socio": "¡Genial que quieras hacerte socio! Podés asociarte en nuestra web oficial o en la sede del club.",
-  "pagar cuota": "Podés pagar la cuota desde la app oficial del club o en cualquiera de nuestras sucursales.",
-  "próximo partido": "El próximo partido es el domingo a las 17:00 en el Estadio Libertadores de América.",
-  "plantel": "Nuestro plantel actual cuenta con jugadores destacados como Silva, Fernández y Bustos.",
-  "solicitudes": "Podés enviar tus solicitudes por mail o acercarte a atención al socio.",
-  "contacto": "Podés contactarnos vía mail, teléfono o redes sociales oficiales del club.",
+  "hacerme socio": "¡Genial que quieras ser parte del club! Podés asociarte desde nuestra web oficial o en la sede.",
+  "pagar cuota": "Podés pagar la cuota desde la app del club o en nuestras sedes.",
+  "próximo partido": "El próximo partido es el domingo a las 19:00 contra Racing.",
+  "plantel": "El plantel actual incluye a referentes como Rey, Marcone, Canelo y más.",
+  "solicitudes": "Para solicitudes especiales, por favor contactanos vía formulario o whatsapp.",
+  "contacto": "Podés comunicarte con nosotros al 1234-5678 o por email a contacto@clubdiablo.com"
 };
 
 const opciones = [
@@ -23,26 +21,10 @@ const opciones = [
   "Contacto"
 ];
 
-function agregarMensaje(texto, tipo) {
+function agregarMensaje(mensaje, tipo) {
   const msg = document.createElement('div');
-  msg.className = 'message ' + tipo;
-
-  if (tipo === 'bot') {
-    const img = document.createElement('img');
-    img.src = avatarBot;
-    img.alt = 'Diablito avatar';
-    img.className = 'avatar-msg';
-
-    const textoMsg = document.createElement('div');
-    textoMsg.className = 'texto-msg';
-    textoMsg.textContent = texto;
-
-    msg.appendChild(img);
-    msg.appendChild(textoMsg);
-  } else {
-    msg.textContent = texto;
-  }
-
+  msg.className = `message ${tipo}`;
+  msg.textContent = mensaje;
   chat.appendChild(msg);
   chat.scrollTop = chat.scrollHeight;
 }
@@ -65,8 +47,7 @@ function manejarOpcion(texto) {
 }
 
 function responder(textoUsuario) {
-  // Buscar coincidencia simple en respuestas
-  const clave = Object.keys(respuestas).find(k => textoUsuario.includes(k));
+  const clave = Object.keys(respuestas).find(p => textoUsuario.includes(p));
   if (clave) {
     setTimeout(() => {
       agregarMensaje(respuestas[clave], 'bot');
@@ -92,9 +73,9 @@ form.addEventListener('submit', e => {
   input.value = '';
 });
 
-// Inicio del chatbot
 window.onload = () => {
-  agregarMensaje("¡Hola! Soy Diablito, tu asistente del Club Independiente. ¿En qué puedo ayudarte?", 'bot');
+  agregarMensaje("¡Hola! Soy Diablito, ¿en qué puedo ayudarte?", 'bot');
   mostrarBotones();
 };
+
 
